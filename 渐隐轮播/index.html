@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+		*{
+			padding: 0;
+			margin: 0;
+			user-select: none;
+		}
+		ul,li{
+			list-style: none;
+		}
+	   #wrap{
+	   	width: 500px;
+	   	height: 500px;
+	   	position: relative;
+	   	left: 50%;
+	   	top: 20%;
+	   	margin-left: -250px;
+	   	overflow: hidden;
+	   }
+		#wrap .img{
+			width: 500px;
+			height: 100%;
+			position: absolute;
+			left: 0;
+			top: 0;
+
+		}
+		.img li {
+		    position: absolute;
+			left: 0;
+			top: 0;
+			width: 500px;
+			height: 100%;
+			transition:all 1s;
+
+		}
+		.img li img{
+			width: 100%;
+			height: 100%;
+		}
+		/* 左右按钮 */
+		#left,#right{
+			display: block;
+			width: 50px;
+			height: 50px;
+			background: rgba(0, 0, 0, .6);
+			color: #fff;
+			font-size: 30px;
+			line-height: 50px;
+			text-align: center;
+			position: absolute;
+			top: 50%;
+			margin-top: -25px;
+			z-index: 2;
+			cursor: pointer;
+			z-index: 55;
+
+		}
+		#left{
+			left: 0;
+		}
+		 #right{
+			right: 0;
+		}
+
+		.btn{
+			width:300px ;
+			height: 30px;
+			position: absolute;
+			bottom: 30px;
+			left: 80px;
+			cursor: pointer;
+			z-index: 55;
+		}
+		.btn li{
+			float: left;
+			width: 30px;
+			height: 30px;
+			border-radius: 50%;
+			background: #ccc;
+			margin: 0 10px;
+		}
+		.btn .black{
+			background: #000;
+
+		}
+	</style>
+</head>
+<body>
+	<div id="wrap">
+		<ul class="img" id="img">
+			<li style="z-index: 6"><img src="img/1.jpg" alt="" ></li>
+			<li style="z-index: 5"><img src="img/2.jpg" alt="" ></li>
+			<li style="z-index: 4"><img src="img/3.jpg" alt="" ></li>
+			<li style="z-index: 3"><img src="img/4.jpg" alt="" ></li>
+			<li style="z-index: 2"><img src="img/5.jpg" alt="" ></li>
+			<li style="z-index: 1"><img src="img/6.jpg" alt="" ></li>
+		</ul>
+
+		<span id="left"><</span>
+		<span id="right">></span>
+
+		<ul class="btn" id="btn">
+			<li class="black"></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+		</ul>
+	</div>
+</body>
+</html>
+<script src="js/move.js"></script>
+<script>
+	function $(id) {
+		return document.getElementById(id)
+	}
+	var num=0;//公用的下标
+	var imgs=$("img").children;//获取全部的li
+	//右按钮点击
+	$("right").onclick=function(){
+		num++;
+		//num临界值的判断
+		if(num>imgs.length-1){
+			num=0;
+		}
+		//重置图片以及底部小圆圈的样式
+		for (var i = 0; i < imgs.length; i++) {
+			imgs[i].style.opacity = 0;
+			btns[i].className="";
+		}
+		//对应位置的图片以及小圆圈
+		imgs[num].style.opacity = 1;
+		btns[num].className="black";
+	}
+	//左边按钮点击
+	$("left").onclick=function(){
+		num--;
+		//num临界值的判断
+		if(num<0){
+			num=imgs.length-1;
+		}
+		//重置图片以及底部小圆圈的样式
+		for (var i = 0; i < imgs.length; i++) {
+			imgs[i].style.opacity = 0;
+			btns[i].className="";
+
+		}
+		//对应位置的图片以及小圆圈
+		imgs[num].style.opacity = 1;
+		btns[num].className="black";
+
+
+	}
+	var btns =$("btn").children;//获取全部的底部小圆圈
+	for (var i = 0; i < imgs.length; i++) {
+		btns[i].index=i;//保存下标
+		//底部小圆圈的鼠标over事件
+		btns[i].onmouseover=function(){
+		    //重置图片以及底部小圆圈的样式
+			for (var j = 0; j< imgs.length; j++) {
+			   imgs[j].style.opacity = 0;
+			   btns[j].className="";
+		    }
+
+		    //console.log(this.index)
+		    //对应位置的图片以及小圆圈
+	     	imgs[this.index].style.opacity = 1;
+			btns[this.index].className="black";
+
+		}
+	}
+	//自动播放
+	var timer=null;
+	clearInterval(timer);//开启定时器前先清空定时器；
+	timer=setInterval($("right").onclick,2000);
+	//鼠标移上停止自动播放
+	$("wrap").onmouseover=function(){
+		clearInterval(timer)
+	}
+	//鼠标移出开启自动播放
+	$("wrap").onmouseout=function(){
+		clearInterval(timer);
+		timer=setInterval($("right").onclick,2000);
+	}
+</script>
